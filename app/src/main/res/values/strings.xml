@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KKMusics</string>
+    <string name="kkapi_id">104970f784655901061637c89b722214</string>
+    <string name="kkapi_secret">e2336c2708d1c86b7cb56cdbf63f8780</string>
+</resources>
