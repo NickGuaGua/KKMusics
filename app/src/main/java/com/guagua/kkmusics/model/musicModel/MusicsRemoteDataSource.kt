@@ -120,4 +120,20 @@ class MusicsRemoteDataSource: MusicsDataSource {
             }
         })
     }
+
+    override fun getCharts(callback: MusicsDataSource.GetChartsCallback) {
+        musicApiService.getCharts("${TOKEN.tokenType} ${TOKEN.accessToken}").enqueue(object : retrofit2.Callback<Charts>{
+            override fun onFailure(call: Call<Charts>?, t: Throwable?) {
+                Log.d(LOG_TAG, "getCharts() Failure: ${t.toString()}")
+            }
+
+            override fun onResponse(call: Call<Charts>?, response: Response<Charts>?) {
+                if (response?.body() != null) {
+                    val charts = response.body()!!
+                    callback.onDataReturn(charts)
+                }
+                else callback.onDataNotAvailable()
+            }
+        })
+    }
 }

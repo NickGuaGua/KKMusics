@@ -1,9 +1,6 @@
 package com.guagua.kkmusics.model.musicModel
 
-import com.guagua.kkmusics.model.domainObject.GenreStations
-import com.guagua.kkmusics.model.domainObject.MoodStations
-import com.guagua.kkmusics.model.domainObject.NewHitsPlaylist
-import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
+import com.guagua.kkmusics.model.domainObject.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -24,5 +21,9 @@ interface MusicApiService{
     @Headers("accept: application/json")
     @GET("/v1.1/new-hits-playlists/{playlist_id}?territory=TW")
     fun getNewHitsPlaylist(@Header("authorization") accessToken: String, @Path("playlist_id") playlistId: String): Call<NewHitsPlaylist>
+
+    @Headers("accept: application/json")
+    @GET("/v1.1/charts?territory=TW")
+    fun getCharts(@Header("authorization") accessToken: String): Call<Charts>
 
 }

@@ -72,4 +72,16 @@ class MusicsRepository: MusicsDataSource{
             }
         })
     }
+
+    override fun getCharts(callback: MusicsDataSource.GetChartsCallback) {
+        musicsRemoteDataSouce.getCharts(object : MusicsDataSource.GetChartsCallback{
+            override fun onDataReturn(data: Charts) {
+                callback.onDataReturn(data)
+            }
+
+            override fun onDataNotAvailable() {
+                callback.onDataNotAvailable()
+            }
+        })
+    }
 }
