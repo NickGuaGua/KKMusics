@@ -1,10 +1,9 @@
 package com.guagua.kkmusics.model.musicModel
 
+import android.os.TokenWatcher
 import android.util.Log
-import com.guagua.kkmusics.model.domainObject.GenreStations
-import com.guagua.kkmusics.model.domainObject.MoodStations
-import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
-import com.guagua.kkmusics.model.domainObject.Token
+import com.guagua.kkmusics.BaseCallback
+import com.guagua.kkmusics.model.domainObject.*
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
@@ -15,7 +14,7 @@ class MusicsRemoteDataSource: MusicsDataSource {
     val LOG_TAG = "MusicsAPI"
     private var musicApiService: MusicApiService
     private var authApiService: AuthApiService
-    private lateinit var TOKEN: Token
+    private var TOKEN: Token = Token()
 
     @Inject
     constructor(authApiService: AuthApiService, musicApiService: MusicApiService){
@@ -30,26 +29,30 @@ class MusicsRemoteDataSource: MusicsDataSource {
     }
 
     override fun getToken(id: String, secret: String, callback: MusicsDataSource.GetTokenCallback) {
-        var credential = "Basic "+generateCredential(id, secret)
-        credential = credential.replace("\n","")
-        Log.d(LOG_TAG, credential)
 
-        authApiService.getToken(credential).enqueue(object : retrofit2.Callback<Token> {
-            override fun onFailure(call: Call<Token>?, t: Throwable?) {
-                Log.d(LOG_TAG, "Failure: ${t.toString()}")
-                callback.onDataNotAvailable()
-            }
+        if (TOKEN.accessToken.isNotEmpty())
+            callback.onDataReturn(TOKEN)
+        else {
+            var credential = "Basic " + generateCredential(id, secret)
+            credential = credential.replace("\n", "")
+            Log.d(LOG_TAG, credential)
 
-            override fun onResponse(call: Call<Token>?, response: Response<Token>?) {
-                if (response?.body() != null) {
-                    val token = response.body()!!
-                    Log.d(LOG_TAG, token.accessToken)
-                    TOKEN = token
-                    callback.onDataReturn(token)
+            authApiService.getToken(credential).enqueue(object : retrofit2.Callback<Token> {
+                override fun onFailure(call: Call<Token>?, t: Throwable?) {
+                    Log.d(LOG_TAG, "Failure: ${t.toString()}")
+                    callback.onDataNotAvailable()
                 }
-                else callback.onDataNotAvailable()
-            }
-        })
+
+                override fun onResponse(call: Call<Token>?, response: Response<Token>?) {
+                    if (response?.body() != null) {
+                        val token = response.body()!!
+                        Log.d(LOG_TAG, token.accessToken)
+                        TOKEN = token
+                        callback.onDataReturn(token)
+                    } else callback.onDataNotAvailable()
+                }
+            })
+        }
     }
 
     override fun getNewHitsPlaylists(callback: MusicsDataSource.GetNewHitsPlaylistsCallback) {
@@ -88,13 +91,30 @@ class MusicsRemoteDataSource: MusicsDataSource {
     override fun getMoodStations(callback: MusicsDataSource.GetMoodStationsCallback) {
         musicApiService.getMoodStations("${TOKEN.tokenType} ${TOKEN.accessToken}").enqueue(object : retrofit2.Callback<MoodStations>{
             override fun onFailure(call: Call<MoodStations>?, t: Throwable?) {
-                Log.d(LOG_TAG, "getGenreStations() Failure: ${t.toString()}")
+                Log.d(LOG_TAG, "getMoodStations() Failure: ${t.toString()}")
             }
 
             override fun onResponse(call: Call<MoodStations>?, response: Response<MoodStations>?) {
                 if (response?.body() != null) {
                     val moodStations = response.body()!!
                     callback.onDataReturn(moodStations)
+                }
+                else callback.onDataNotAvailable()
+            }
+        })
+    }
+
+    override fun getNewHitsPlaylist(playlistId: String, callback: MusicsDataSource.GetNewHitsPlaylistCallback) {
+        musicApiService.getNewHitsPlaylist("${TOKEN.tokenType} ${TOKEN.accessToken}", playlistId).enqueue(object : retrofit2.Callback<NewHitsPlaylist>{
+            override fun onFailure(call: Call<NewHitsPlaylist>?, t: Throwable?) {
+                Log.d(LOG_TAG, "getNewHitsPlaylist() Failure: ${t.toString()}")
+            }
+
+            override fun onResponse(call: Call<NewHitsPlaylist>?, response: Response<NewHitsPlaylist>?) {
+
+                if (response?.body() != null) {
+                    val newHitsPlaylist = response.body()!!
+                    callback.onDataReturn(newHitsPlaylist)
                 }
                 else callback.onDataNotAvailable()
             }

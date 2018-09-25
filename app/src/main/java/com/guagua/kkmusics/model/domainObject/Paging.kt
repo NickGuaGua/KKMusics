@@ -1,8 +1,9 @@
 package com.guagua.kkmusics.model.domainObject
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Paging{
+class Paging: Serializable {
 
     @SerializedName("offset")
     var offset: Int = 0

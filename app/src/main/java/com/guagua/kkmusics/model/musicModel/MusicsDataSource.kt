@@ -1,10 +1,7 @@
 package com.guagua.kkmusics.model.musicModel
 
 import com.guagua.kkmusics.BaseCallback
-import com.guagua.kkmusics.model.domainObject.GenreStations
-import com.guagua.kkmusics.model.domainObject.MoodStations
-import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
-import com.guagua.kkmusics.model.domainObject.Token
+import com.guagua.kkmusics.model.domainObject.*
 
 interface MusicsDataSource{
 
@@ -16,6 +13,8 @@ interface MusicsDataSource{
 
     interface GetMoodStationsCallback: BaseCallback<MoodStations>
 
+    interface GetNewHitsPlaylistCallback: BaseCallback<NewHitsPlaylist>
+
     fun getNewHitsPlaylists(callback: GetNewHitsPlaylistsCallback)
 
     fun getToken(id: String, secret: String, callback: GetTokenCallback)
@@ -23,5 +22,7 @@ interface MusicsDataSource{
     fun getGenreStations(callback: GetGenreStationsCallback)
 
     fun getMoodStations(callback: GetMoodStationsCallback)
+
+    fun getNewHitsPlaylist(playlistId: String, callback: GetNewHitsPlaylistCallback)
 
 }

@@ -1,4 +1,4 @@
-package com.guagua.kkmusics.musics.Adapter
+package com.guagua.kkmusics.newHitsPlaylist
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
@@ -8,14 +8,16 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.guagua.kkmusics.BaseCallback
 import com.guagua.kkmusics.R
+import com.guagua.kkmusics.model.domainObject.NewHitsPlaylist
 import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
+import kotlinx.android.synthetic.main.item_new_hits_playlist.view.*
 import kotlinx.android.synthetic.main.item_new_hits_playlists.view.*
 
 
-class NewHitsPlaylistsAdapter(playlist: NewHitsPlaylists = NewHitsPlaylists()) : RecyclerView.Adapter<NewHitsPlaylistsAdapter.ViewHolder>(), View.OnClickListener {
+class NewHitsPlaylistAdapter(playlist: NewHitsPlaylist = NewHitsPlaylist()) : RecyclerView.Adapter<NewHitsPlaylistAdapter.ViewHolder>(), View.OnClickListener {
 
     interface onItemClickListener{
-        fun onItemClick(data: NewHitsPlaylists.Data)
+        fun onItemClick(data: NewHitsPlaylist.Data)
     }
 
     private lateinit var listener: onItemClickListener
@@ -25,29 +27,29 @@ class NewHitsPlaylistsAdapter(playlist: NewHitsPlaylists = NewHitsPlaylists()) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // create a new view
         context = parent.context
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.item_new_hits_playlists, parent, false)
+        val view =  LayoutInflater.from(parent.context).inflate(R.layout.item_new_hits_playlist, parent, false)
         view.setOnClickListener(this)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, i: Int) {
-        holder.title.text = dataset.datas[i].title
-        holder.owner.text = dataset.datas[i].owner.name
-        Glide.with(context).load(dataset.datas[i].images[0].url).into(holder.image)
-        holder.itemView.tag = dataset.datas[i]
+        holder.name.text = dataset.tracks.datas[i].name
+        holder.artist.text = dataset.tracks.datas[i].album.artist.name
+        holder.itemView.tag = dataset.tracks.datas[i]
     }
 
     override fun getItemCount(): Int {
-        return dataset.datas.size
+        return dataset.tracks.datas.size
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val image = view.item_new_hit_playlist_image
-        val title = view.item_new_hit_playlist_title
-        val owner = view.item_new_hit_playlist_owner_name
+        val name = view.name
+        val artist = view.artist
+        val playButton = view.play
+
     }
 
-    fun setData(data: NewHitsPlaylists){
+    fun setData(data: NewHitsPlaylist){
         dataset = data
         notifyDataSetChanged()
     }
@@ -58,7 +60,7 @@ class NewHitsPlaylistsAdapter(playlist: NewHitsPlaylists = NewHitsPlaylists()) :
 
     override fun onClick(v: View) {
         if (listener != null)
-            listener.onItemClick(v.tag as NewHitsPlaylists.Data)
+            listener.onItemClick(v.tag as NewHitsPlaylist.Data)
     }
 
 }

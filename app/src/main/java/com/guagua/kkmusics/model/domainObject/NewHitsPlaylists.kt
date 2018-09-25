@@ -1,8 +1,9 @@
 package com.guagua.kkmusics.model.domainObject
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class NewHitsPlaylists{
+class NewHitsPlaylists: Serializable{
 
     @SerializedName("data")
     var datas: Array<Data> = arrayOf()
@@ -13,7 +14,7 @@ class NewHitsPlaylists{
     @SerializedName("summary")
     var summary: Summary = Summary()
 
-    class Data{
+    class Data : Serializable {
 
         @SerializedName("id")
         var id: String = ""
@@ -35,15 +36,6 @@ class NewHitsPlaylists{
 
         @SerializedName("owner")
         var owner: Owner = Owner()
-    }
-
-    class Owner{
-
-        @SerializedName("id")
-        var id: String = ""
-
-        @SerializedName("name")
-        var name: String = ""
     }
 
 }

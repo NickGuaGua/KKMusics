@@ -1,15 +1,12 @@
 package com.guagua.kkmusics.model.musicModel
 
-import com.guagua.kkmusics.model.domainObject.GenreStations
-import com.guagua.kkmusics.model.domainObject.MoodStations
-import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
-import com.guagua.kkmusics.model.domainObject.Token
+import com.guagua.kkmusics.model.domainObject.*
 import javax.inject.Inject
 import javax.inject.Named
 
 class MusicsRepository: MusicsDataSource{
 
-    var musicsRemoteDataSouce: MusicsDataSource
+    private var musicsRemoteDataSouce: MusicsDataSource
 
     @Inject
     constructor(musicsRemoteDataSouce: MusicsDataSource){
@@ -64,4 +61,15 @@ class MusicsRepository: MusicsDataSource{
         })
     }
 
+    override fun getNewHitsPlaylist(playlistId: String, callback: MusicsDataSource.GetNewHitsPlaylistCallback) {
+        musicsRemoteDataSouce.getNewHitsPlaylist(playlistId, object : MusicsDataSource.GetNewHitsPlaylistCallback{
+            override fun onDataReturn(data: NewHitsPlaylist) {
+                callback.onDataReturn(data)
+            }
+
+            override fun onDataNotAvailable() {
+                callback.onDataNotAvailable()
+            }
+        })
+    }
 }

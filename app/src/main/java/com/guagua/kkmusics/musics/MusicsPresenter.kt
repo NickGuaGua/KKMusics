@@ -32,7 +32,7 @@ class MusicsPresenter @Inject constructor(var musicsRepository: MusicsRepository
     override fun getNewHitsPlaylists() {
         musicsRepository.getNewHitsPlaylists(object : MusicsDataSource.GetNewHitsPlaylistsCallback{
             override fun onDataReturn(data: NewHitsPlaylists) {
-                view.setNewHitsPlaylist(data)
+                view.setNewHitsPlaylists(data)
             }
 
             override fun onDataNotAvailable() {

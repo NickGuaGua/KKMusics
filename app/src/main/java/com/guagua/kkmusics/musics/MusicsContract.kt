@@ -8,7 +8,7 @@ import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
 interface MusicsContract{
 
     interface View {
-        fun setNewHitsPlaylist(playlists: NewHitsPlaylists)
+        fun setNewHitsPlaylists(playlists: NewHitsPlaylists)
         fun setGenreStations(genreStations: GenreStations)
         fun setMoodStations(moodStations: MoodStations)
     }

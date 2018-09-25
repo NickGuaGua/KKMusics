@@ -1,6 +1,8 @@
 package com.guagua.kkmusics.model.domainObject
 
-class Image{
+import java.io.Serializable
+
+class Image : Serializable {
 
     var height: String = ""
 
