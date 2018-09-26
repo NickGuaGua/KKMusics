@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.guagua.kkmusics.R
 import com.guagua.kkmusics.model.domainObject.NewHitsPlaylist
 import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
+import com.guagua.kkmusics.util.WebPlayer
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_new_hits_playlist.*
 import javax.inject.Inject
@@ -45,7 +46,7 @@ class NewHitsPlaylistFragment @Inject constructor(): DaggerFragment(), NewHitsPl
         presenter.initTitleBar()
         presenter.initNewHitsPlaylist()
         presenter.getNewHitsPlaylist(playlist.id)
-        initBanner()
+        presenter.initBanner()
     }
 
     override fun getPlaylistDataFromIntent(){
@@ -58,7 +59,7 @@ class NewHitsPlaylistFragment @Inject constructor(): DaggerFragment(), NewHitsPl
         (activity!! as AppCompatActivity).supportActionBar!!.title = playlist.title
     }
 
-    fun initBanner(){
+    override fun initBanner(){
         Glide.with(activity!!).load(playlist.owner.images[0].url).into(avatar)
         description.text = playlist.description
         Glide.with(activity!!).load(playlist.images[1].url).into(banner_pic)
@@ -88,36 +89,11 @@ class NewHitsPlaylistFragment @Inject constructor(): DaggerFragment(), NewHitsPl
         new_hits_playlist_progressBar.visibility = View.GONE
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun loadPlayerWidget(url: String) {
-
-        fun addPlayerToSnackbar(player: WebView){
-            val snackbar = Snackbar.make(coordinatorLayout, "", Snackbar.LENGTH_INDEFINITE)
-            val snackView = snackbar.view as Snackbar.SnackbarLayout
-            val parenParams = snackView.layoutParams
-            parenParams.height = 300
-            snackView.layoutParams = parenParams
-            snackView.addView(player)
-            snackbar.show()
-        }
-
-        val player = WebView(context)
-        player.loadUrl(url)
-        player.settings.javaScriptEnabled = true
-        player.isSoundEffectsEnabled = true
-        player.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {
-                // reference: https://stackoverflow.com/questions/16709963/programmatic-click-in-android-webview
-                player.loadUrl("javascript:(function(){"+
-                        "l=document.getElementsByClassName('clickable control icon play')[0];"+
-                        "e=document.createEvent('HTMLEvents');"+
-                        "e.initEvent('click',true,true);"+
-                        "l.dispatchEvent(e);"+
-                        "})()")
-            }
-        }
-        addPlayerToSnackbar(player)
+        WebPlayer(this.context!!, coordinatorLayout).autoPlay(url)
     }
 
-
+    override fun isActive(): Boolean {
+        return isAdded
+    }
 }

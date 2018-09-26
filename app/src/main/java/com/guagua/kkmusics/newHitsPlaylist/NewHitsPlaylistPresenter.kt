@@ -41,4 +41,8 @@ class NewHitsPlaylistPresenter @Inject constructor(private var musicsRepository:
     override fun initNewHitsPlaylist() {
         view.initNewHitsPlaylist()
     }
+
+    override fun initBanner() {
+        view.initBanner()
+    }
 }

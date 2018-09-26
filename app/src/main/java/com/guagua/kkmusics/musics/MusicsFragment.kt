@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.guagua.kkmusics.R
+import com.guagua.kkmusics.di.ActivityScoped
 import com.guagua.kkmusics.model.domainObject.GenreStations
 import com.guagua.kkmusics.model.domainObject.MoodStations
 import com.guagua.kkmusics.model.domainObject.NewHitsPlaylists
@@ -19,6 +20,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_musics.*
 import javax.inject.Inject
 
+@ActivityScoped
 class MusicsFragment @Inject constructor(): DaggerFragment(), MusicsContract.View {
 
     @Inject

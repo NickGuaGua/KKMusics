@@ -4,7 +4,7 @@ import com.guagua.kkmusics.model.domainObject.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MusicsRepository: MusicsDataSource{
+open class MusicsRepository: MusicsDataSource{
 
     private var musicsRemoteDataSouce: MusicsDataSource
 
